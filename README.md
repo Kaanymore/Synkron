@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡ Synkron
+# Synkron
 
 ### E-Commerce Customer Intelligence Platform
 
@@ -20,58 +20,58 @@
 
 ---
 
-## 🎯 Nedir?
+## Nedir?
 
 **Synkron**, e-ticaret platformlarına bağlanarak müşteri verilerinizi analiz eden, sorunları tespit eden ve otomatik düzeltme sağlayan açık kaynaklı bir yönetim panelidir.
 
 Binlerce müşteri kaydını saniyeler içinde tarayarak:
-- 📞 **Hatalı telefon numaralarını** otomatik düzeltir
-- 🔄 **Kopya kayıtları** tespit eder
-- 📧 **Mükerrer e-postaları** bulur
-- 🗑️ **Toplu silme** ile veritabanını temizler
+-  **Hatalı telefon numaralarını** otomatik düzeltir
+-  **Kopya kayıtları** tespit eder
+-  **Mükerrer e-postaları** bulur
+-  **Toplu silme** ile veritabanını temizler
 
 ---
 
-## ✨ Özellikler
+##  Özellikler
 
-### 📊 Anlık İstatistik Panosu
+###  Anlık İstatistik Panosu
 Sayfa açılır açılmaz toplam müşteri sayısı, numarasız müşteriler ve analiz sonuçları görüntülenir.
 
-### 🔍 Derin Analiz Motoru
+###  Derin Analiz Motoru
 Arka planda çalışan analiz motoru tüm müşteriöri tarar ve sınıflandırır:
 - **Aynı Telefon Numaraları** — Kopya kayıtları gruplayarak gösterir
 - **Aynı E-posta Adresleri** — Mükerrer mail adreslerini tespit eder
 - **Hatalı Numaralar** — +90 ile başlamayan tüm numaraları listeler
 
-### 🪄 Telefon Numarası Otomatik Düzeltme
+###  Telefon Numarası Otomatik Düzeltme
 Hatalı formatlı Türk telefon numaralarını **tek tıkla** veya **toplu** olarak düzeltir:
 
 | Mevcut Format | Otomatik Düzeltme | Sonuç |
 |:---:|:---:|:---:|
-| `5330874047` | +90 ekle | `+905330874047` |
-| `05330874047` | 0'ı kaldır, +90 ekle | `+905330874047` |
-| `905330874047` | + ekle | `+905330874047` |
+| `5550001122` | +90 ekle | `+905550001122` |
+| `05550001122` | 0'ı kaldır, +90 ekle | `+905550001122` |
+| `905550001122` | + ekle | `+905550001122` |
 
-> ⚠️ Tanınmayan formatlar atlanır — hiçbir veri bozulmaz.
+> Tanınmayan formatlar atlanır — hiçbir veri bozulmaz.
 
-### 🔎 Müşteri Arama
+### Müşteri Arama
 İsim, e-posta veya telefon numarası ile anlık arama yapın.
 
-### 🏙️ İl / İlçe Filtreleme
+### İl / İlçe Filtreleme
 Analiz sonuçlarını şehir ve ilçe bazında filtreleyin.
 
-### ✏️ Manuel Düzenleme
+### Manuel Düzenleme
 Her müşterinin telefon numarasını tek tek güncelleyebilirsiniz.
 
-### 🗑️ Tekli ve Toplu Silme
+### Tekli ve Toplu Silme
 Tek bir müşteriyi veya seçili müşterileri kalıcı olarak silin. Silme öncesi onay istenir.
 
-### ⚙️ API Ayarları
+### API Ayarları
 Client ID ve Client Secret bilgilerini arayüz üzerinden güncelleyin. Bilgiler `.env` dosyasına kaydedilir.
 
 ---
 
-## 🚀 Kurulum
+## Kurulum
 
 ### Gereksinimler
 - Python 3.8+
@@ -104,7 +104,7 @@ Tarayıcınızda otomatik olarak `http://127.0.0.1:5001` açılacaktır.
 
 ---
 
-## 📁 Proje Yapısı
+## Proje Yapısı
 
 ```
 synkron/
@@ -126,7 +126,7 @@ synkron/
 
 ---
 
-## 🛡️ Güvenlik
+## Güvenlik
 
 - API anahtarlarınız **asla** repoya eklenmez (`.gitignore` ile korunur)
 - Gerçek veriler yalnızca sizin tarayıcınızda görüntülenir
@@ -134,7 +134,7 @@ synkron/
 
 ---
 
-## 🏗️ Teknoloji Yığını
+## Teknoloji Yığını
 
 | Bileşen | Teknoloji |
 |---------|----------|
@@ -145,13 +145,13 @@ synkron/
 
 ---
 
-## 🤝 Katkıda Bulunun
+## Katkıda Bulunun
 
 Katkılarınızı bekliyoruz! Detaylar için [CONTRIBUTING.md](CONTRIBUTING.md) dosyasına bakın.
 
 ---
 
-## 📄 Lisans
+## Lisans
 
 Bu proje [MIT Lisansı](LICENSE) ile lisanslanmıştır.
 
@@ -159,6 +159,6 @@ Bu proje [MIT Lisansı](LICENSE) ile lisanslanmıştır.
 
 <div align="center">
 
-**⚡ Synkron ile müşteri verinizi kontrol altına alın.**
+** Synkron ile müşteri verinizi kontrol altına alın.**
 
 </div>
