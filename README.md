@@ -159,6 +159,6 @@ Bu proje [MIT Lisansı](LICENSE) ile lisanslanmıştır.
 
 <div align="center">
 
-** Synkron ile müşteri verinizi kontrol altına alın.**
+*Synkron ile müşteri verinizi kontrol altına alın.*
 
 </div>
