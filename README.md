@@ -13,6 +13,9 @@
 
 ---
 
+![Synkron](https://awesomescreenshot.s3.amazonaws.com/image/7295575/59832435-166ec442a568c71ad7a395613139237d.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJSCJQ2NM3XLFPVKA%2F20260415%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260415T123515Z&X-Amz-Expires=28800&X-Amz-SignedHeaders=host&X-Amz-Signature=de4a2dbae467cf7d3456be117aeb3ff6044c8f557b8b8daa0fdde50bb23504c9)
+
+
 *E-ticaret mağazanızdaki müşteri verilerini tek bir panelden yönetin.*
 *Kopya kayıtları bulun, hatalı numaraları otomatik düzeltin, veritabanınızı temizleyin.*
 
@@ -24,7 +27,7 @@
 
 **Synkron**, e-ticaret platformlarına bağlanarak müşteri verilerinizi analiz eden, sorunları tespit eden ve otomatik düzeltme sağlayan açık kaynaklı bir yönetim panelidir.
 
-Binlerce müşteri kaydını saniyeler içinde tarayarak:
+Binlerce müşteri kaydını saniyeler (Veritabanına bağlı olarak saniye kavramı saat olabilir) içinde tarayarak:
 -  **Hatalı telefon numaralarını** otomatik düzeltir
 -  **Kopya kayıtları** tespit eder
 -  **Mükerrer e-postaları** bulur
