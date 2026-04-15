@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synkron — Müşteri Yönetim Paneli</title>
+    <meta name="description" content="E-ticaret müşteri verilerinizi analiz edin, temizleyin ve yönetin.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-top">
+            <div class="logo">
+                <img src="/static/icon.png" alt="Synkron">
+                <div class="logo-text">
+                    <span class="logo-name">Synkron</span>
+                    <span class="logo-sub">Customer Intelligence</span>
+                </div>
+            </div>
+
+            <button id="fetch-btn" class="analyze-btn" onclick="startAnalysis()">
+                <div class="analyze-btn-icon"><i class="fas fa-bolt"></i></div>
+                <span>Derin Analiz Başlat</span>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-label">Genel Bakış</div>
+                <a class="nav-link active" onclick="switchTab('stat-tab', this)">
+                    <div class="left-part"><i class="fas fa-chart-pie"></i> İstatistik Panosu</div>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-label">Müşteriler</div>
+                <a class="nav-link" onclick="switchTab('all-tab', this)">
+                    <div class="left-part"><i class="fas fa-users"></i> Tüm Müşteriler</div>
+                    <span class="badge" id="all-count">-</span>
+                </a>
+                <a class="nav-link" onclick="switchTab('dup-tab', this)">
+                    <div class="left-part"><i class="fas fa-copy"></i> Aynı Numaralar</div>
+                    <span class="badge" id="dup-count">-</span>
+                </a>
+                <a class="nav-link" onclick="switchTab('miss-tab', this)">
+                    <div class="left-part"><i class="fas fa-user-slash"></i> Numarasız</div>
+                    <span class="badge" id="miss-count">-</span>
+                </a>
+                <a class="nav-link" onclick="switchTab('invalid-tab', this)">
+                    <div class="left-part"><i class="fas fa-exclamation-triangle"></i> Hatalı Numaralar</div>
+                    <span class="badge" id="invalid-count">-</span>
+                </a>
+                <a class="nav-link" onclick="switchTab('email-tab', this)">
+                    <div class="left-part"><i class="fas fa-envelope"></i> Aynı Mailler</div>
+                    <span class="badge" id="email-count">-</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="sidebar-divider"></div>
+            <a class="nav-link" onclick="switchTab('settings-tab', this); loadSettings();">
+                <div class="left-part"><i class="fas fa-cog"></i> Ayarlar</div>
+                <i class="fas fa-chevron-right" style="font-size:0.65rem;color:var(--muted-foreground);"></i>
+            </a>
+            
+            <a href="https://github.com/Kaanymore/Synkron" target="_blank" class="github-simple-btn" title="GitHub'da İncele">
+                <i class="fab fa-github"></i>
+                <span>GitHub'da Değerlendir</span>
+            </a>
+
+            <div class="sidebar-version" style="justify-content: center; margin-top: 10px;">
+                <span>Synkron v1.0.0</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <header class="top-header">
+            <div style="color:var(--text-muted); font-size: 0.95rem; font-weight: 500;">
+                <i class="fas fa-shield-alt"></i> Yönetim Paneli
+            </div>
+            <div class="loc-filters" id="loc-filters" style="display:none;">
+                <select id="city-select" class="filter-select" onchange="applyClientFilter()">
+                    <option value="">Tüm İller</option>
+                </select>
+                <select id="dist-select" class="filter-select" onchange="applyClientFilter()">
+                    <option value="">Tüm İlçeler</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Loading Overlay with Progress -->
+        <div id="loading-overlay" class="loading-state">
+            <div class="preloader">
+                <div class="crack crack1"></div>
+                <div class="crack crack2"></div>
+                <div class="crack crack3"></div>
+                <div class="crack crack4"></div>
+                <div class="crack crack5"></div>
+            </div>
+            <div id="loading-text" style="color:var(--accent); letter-spacing:2px; font-weight:700; font-size:1.1rem;">ANALİZ YAPILIYOR...</div>
+            <div class="progress-wrap">
+                <div class="progress-fill" id="progress-fill"></div>
+                <div class="progress-thumb" id="progress-thumb"></div>
+            </div>
+            <div class="progress-label" id="progress-label">Hazırlanıyor...</div>
+        </div>
+
+        <div class="content-scroll">
+
+            <div id="bulk-action-bar" class="bulk-action-bar">
+                <div>Seçili <strong id="sel-count">0</strong> müşteri var.</div>
+                <button class="bulk-btn" onclick="bulkDelete()"><i class="fas fa-trash-alt"></i> Seçilileri Sil</button>
+            </div>
+
+            <!-- ═══ STATS TAB ═══ -->
+            <div id="stat-tab" class="tab-content active">
+                <h2 style="margin-bottom: 24px;">Hoş Geldiniz.</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-users" style="color:var(--accent);font-size:1.5rem;"></i>
+                        <div class="stat-val" id="stat-total"><i class="fas fa-spinner fa-spin" style="font-size:1rem;opacity:0.3;"></i></div>
+                        <div class="stat-label">Toplam Müşteri</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-exclamation-circle" style="color:#fcd34d;font-size:1.5rem;"></i>
+                        <div class="stat-val" id="stat-invalid">?</div>
+                        <div class="stat-label">Hatalı Numaralar</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-user-slash" style="color:#fca5a5;font-size:1.5rem;"></i>
+                        <div class="stat-val" id="stat-miss"><i class="fas fa-spinner fa-spin" style="font-size:1rem;opacity:0.3;"></i></div>
+                        <div class="stat-label">Numarası Olmayan</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-copy" style="color:#93c5fd;font-size:1.5rem;"></i>
+                        <div class="stat-val" id="stat-dup">?</div>
+                        <div class="stat-label">Aynı Numara (Kopya)</div>
+                    </div>
+                </div>
+                <div style="width:100%; padding: 30px; background:var(--bg-card); border-radius:12px; border:1px solid var(--border-color); color:var(--text-muted); font-size:0.9rem; line-height:1.8;">
+                    <i class="fas fa-info-circle" style="color:var(--accent);"></i>
+                    <strong>Toplam</strong> ve <strong>Numarasız</strong> değerleri anında gösterilir.<br>
+                    <i class="fas fa-bolt" style="color:#fcd34d;"></i>
+                    <strong>Hatalı Numaralar</strong>, <strong>Aynı Numara</strong> ve <strong>Aynı Mail</strong> analizi için soldaki <strong>"Derin Analiz Başlat"</strong> butonuna tıklayın.
+                </div>
+            </div>
+
+            <!-- ═══ ALL CUSTOMERS TAB ═══ -->
+            <div id="all-tab" class="tab-content">
+                <h2 style="margin-bottom: 20px;">Tüm Müşteriler</h2>
+                <div class="search-bar">
+                    <input class="search-input" id="search-all" type="text" placeholder="İsim, e-posta veya telefon ile arayın..." onkeydown="if(event.key==='Enter') searchAll()">
+                    <button class="cyan-btn" style="margin:0;padding:12px 20px;" onclick="searchAll()"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="table-card">
+                    <table id="all-table">
+                        <thead><tr>
+                            <th><label class="w-container"><input type="checkbox" onchange="toggleAll(this,'all-table')"><div class="w-checkmark"></div></label></th>
+                            <th>Müşteri Adı</th><th>E-Posta</th><th>Telefon</th><th>İl / İlçe</th><th>Tarih</th><th>İşlemler</th>
+                        </tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="pag-all"></div>
+            </div>
+
+            <!-- ═══ DUPLICATE PHONES TAB ═══ -->
+            <div id="dup-tab" class="tab-content">
+                <h2 style="margin-bottom: 20px;">Aynı Numaralar</h2>
+                <div id="dup-need" class="need-analysis">
+                    <i class="fas fa-flask"></i>
+                    <p>Bu sekme için <strong>Derin Analiz</strong> gereklidir.</p>
+                </div>
+                <div class="table-card" id="dup-card" style="display:none;">
+                    <table id="dup-table">
+                        <thead><tr>
+                            <th><label class="w-container"><input type="checkbox" onchange="toggleAll(this,'dup-table')"><div class="w-checkmark"></div></label></th>
+                            <th>Müşteri Adı</th><th>E-Posta</th><th>Telefon</th><th>İl / İlçe</th><th>Tarih</th><th>İşlemler</th>
+                        </tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="pag-dup"></div>
+            </div>
+
+            <!-- ═══ MISSING PHONES TAB ═══ -->
+            <div id="miss-tab" class="tab-content">
+                <h2 style="margin-bottom: 20px;">Numarasız Müşteriler</h2>
+                <div class="table-card">
+                    <table id="miss-table">
+                        <thead><tr>
+                            <th><label class="w-container"><input type="checkbox" onchange="toggleAll(this,'miss-table')"><div class="w-checkmark"></div></label></th>
+                            <th>Müşteri Adı</th><th>E-Posta</th><th>Telefon</th><th>İl / İlçe</th><th>Tarih</th><th>İşlemler</th>
+                        </tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="pag-miss"></div>
+            </div>
+
+            <!-- ═══ INVALID PHONES TAB ═══ -->
+            <div id="invalid-tab" class="tab-content">
+                <h2 style="margin-bottom: 20px;">Hatalı Numaralar (+90 sız)</h2>
+                <div id="invalid-need" class="need-analysis">
+                    <i class="fas fa-flask"></i>
+                    <p>Bu sekme için <strong>Derin Analiz</strong> gereklidir.</p>
+                </div>
+                <!-- Auto-Fix Bar -->
+                <div id="auto-fix-bar" class="bulk-fix-bar" style="display:none;">
+                    <div style="color:var(--success);"><i class="fas fa-magic"></i> <span id="fixable-count">0</span> hatalı numara bulundu. Uygun olanlar otomatik düzeltilebilir.</div>
+                    <button id="bulk-fix-btn" class="fix-all-btn" onclick="bulkAutoFix()"><i class="fas fa-magic"></i> Tümünü Otomatik Düzelt</button>
+                </div>
+                <div class="table-card" id="invalid-card" style="display:none;">
+                    <table id="invalid-table">
+                        <thead><tr>
+                            <th><label class="w-container"><input type="checkbox" onchange="toggleAll(this,'invalid-table')"><div class="w-checkmark"></div></label></th>
+                            <th>Müşteri Adı</th><th>E-Posta</th><th>Telefon</th><th>İl / İlçe</th><th>Tarih</th><th>İşlemler</th>
+                        </tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="pag-invalid"></div>
+            </div>
+
+            <!-- ═══ EMAIL DUPLICATES TAB ═══ -->
+            <div id="email-tab" class="tab-content">
+                <h2 style="margin-bottom: 20px;">Aynı Mailler</h2>
+                <div id="email-need" class="need-analysis">
+                    <i class="fas fa-flask"></i>
+                    <p>Bu sekme için <strong>Derin Analiz</strong> gereklidir.</p>
+                </div>
+                <div class="table-card" id="email-card" style="display:none;">
+                    <table id="email-table">
+                        <thead><tr>
+                            <th><label class="w-container"><input type="checkbox" onchange="toggleAll(this,'email-table')"><div class="w-checkmark"></div></label></th>
+                            <th>Müşteri Adı</th><th>E-Posta</th><th>Telefon</th><th>İl / İlçe</th><th>Tarih</th><th>İşlemler</th>
+                        </tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="pag-email"></div>
+            </div>
+
+            <!-- ═══ SETTINGS TAB ═══ -->
+            <div id="settings-tab" class="tab-content">
+                <h2 style="margin-bottom: 24px;">API Ayarları</h2>
+                <div class="settings-card">
+                    <div class="settings-group">
+                        <label>CLIENT_ID</label>
+                        <input type="text" id="cfg-client-id" placeholder="Client ID Girin">
+                    </div>
+                    <div class="settings-group">
+                        <label>CLIENT_SECRET</label>
+                        <input type="text" id="cfg-client-secret" placeholder="Client Secret Girin" autocomplete="off" spellcheck="false" style="-webkit-text-security: disc;">
+                    </div>
+                    <div class="settings-group">
+                        <label>Mağaza Adı (Slug)</label>
+                        <input type="text" id="cfg-store-slug" placeholder="örn: magazaadi">
+                    </div>
+                    <button class="cyan-btn" style="width:100%; margin:0;" onclick="saveSettings()">
+                        <i class="fas fa-save"></i> Kimlik Bilgilerini Kaydet
+                    </button>
+                    <p style="margin-top:15px; font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-info-circle"></i> Ayarları kaydettikten sonra sayfayı yeniden yükleyiniz.</p>
+                </div>
+                
+            </div>
+
+        </div>
+    </main>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,856 @@
+/* ═══════════════════════════════════════════════
+   Synkron — E-Commerce Customer Intelligence
+   Shadcn UI Replica Design System (Zinc Dark)
+   ═══════════════════════════════════════════════ */
+
+:root {
+    --background: #09090b;
+    --foreground: #fafafa;
+    --card: #09090b;
+    --card-foreground: #fafafa;
+    --popover: #09090b;
+    --popover-foreground: #fafafa;
+    --primary: #fafafa;
+    --primary-foreground: #18181b;
+    --secondary: #27272a;
+    --secondary-foreground: #fafafa;
+    --muted: #27272a;
+    --muted-foreground: #a1a1aa;
+    --accent: #27272a;
+    --accent-foreground: #fafafa;
+    --destructive: #7f1d1d;
+    --destructive-foreground: #fafafa;
+    --border: #27272a;
+    --input: #27272a;
+    --ring: #d4d4d8;
+    --radius: 0.5rem;
+    --danger: #ef4444;
+    --success: #10b981;
+}
+
+/* ── Reset & Base ── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background);
+    color: var(--foreground);
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+    font-size: 0.875rem; /* text-sm default */
+}
+
+/* ── Layout ── */
+.sidebar {
+    width: 260px;
+    background-color: var(--background);
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+    z-index: 10;
+    overflow: hidden;
+}
+
+.sidebar-top {
+    padding: 20px 16px 0;
+}
+
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 260px);
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    background-color: var(--background);
+}
+
+/* ── Custom Scrollbar (Shadcn style) ── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--muted-foreground);
+}
+
+/* ── Logo ── */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--foreground);
+    margin-bottom: 20px;
+    padding: 0 8px;
+}
+
+.logo img {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.logo-name {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.logo-sub {
+    font-size: 0.65rem;
+    color: var(--muted-foreground);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+}
+
+/* ── Analyze Button (sidebar) ── */
+.analyze-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    height: 40px;
+    padding: 0 14px;
+    background: linear-gradient(135deg, #18181b 0%, #27272a 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--foreground);
+    font-weight: 500;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 4px;
+}
+
+.analyze-btn:hover {
+    border-color: var(--ring);
+    background: linear-gradient(135deg, #1c1c20 0%, #2d2d32 100%);
+}
+
+.analyze-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.analyze-btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-size: 0.7rem;
+    flex-shrink: 0;
+}
+
+/* ── Sidebar Nav ── */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0 16px;
+}
+
+.nav-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.nav-section + .nav-section {
+    margin-top: 4px;
+}
+
+.nav-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted-foreground);
+    margin: 12px 0 6px 12px;
+    font-weight: 600;
+    opacity: 0.6;
+}
+
+/* ── Sidebar Bottom ── */
+.sidebar-bottom {
+    padding: 0 16px 16px;
+}
+
+.sidebar-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 0;
+}
+
+.sidebar-version {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    font-size: 0.7rem;
+    color: var(--muted-foreground);
+    opacity: 0.5;
+}
+
+.github-link {
+    color: var(--muted-foreground);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s, opacity 0.2s;
+    opacity: 0.7;
+}
+
+.github-link:hover {
+    color: var(--foreground);
+    opacity: 1;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: var(--muted-foreground);
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.nav-link .left-part {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-link:hover {
+    color: var(--foreground);
+    background-color: var(--accent);
+}
+
+.nav-link.active {
+    color: var(--foreground);
+    background-color: var(--accent);
+}
+
+/* ── Badge (Shadcn Style) ── */
+.badge {
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+    padding: 2px 10px;
+    border-radius: 9999px; /* full rounded */
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid var(--border);
+}
+
+.nav-link.active .badge {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border-color: transparent;
+}
+
+/* ── Shadcn Buttons ── */
+.cyan-btn { /* Primary Button */
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border: none;
+    height: 40px;
+    padding: 0 16px;
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: opacity 0.2s;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.cyan-btn:hover { opacity: 0.9; }
+
+.cyan-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Top Header ── */
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 56px;
+    padding: 0 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--background);
+}
+
+.loc-filters {
+    display: flex;
+    gap: 12px;
+}
+
+.filter-select {
+    background: var(--background);
+    border: 1px solid var(--input);
+    color: var(--foreground);
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.filter-select:focus { border-color: var(--ring); box-shadow: 0 0 0 1px var(--ring); }
+
+/* ── Content Area ── */
+.content-scroll {
+    padding: 32px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* ── Bulk Action Bar ── */
+.bulk-action-bar {
+    display: none;
+    background: var(--destructive);
+    color: var(--destructive-foreground);
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.bulk-action-bar.show { display: flex; animation: fadeIn 0.3s; }
+
+.bulk-btn {
+    background: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bulk-btn:hover { background: var(--accent); }
+
+/* ── Loading Overlay ── */
+.loading-state {
+    display: none;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 24px;
+    background: rgba(9, 9, 11, 0.8);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+}
+
+/* Preloader kept as is but adapted colors */
+.preloader {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.crack {
+    position: absolute; width: 10%; aspect-ratio: 1;
+    background-color: var(--primary);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    animation: rotate 6s infinite;
+}
+.crack2 { width: 12%; animation-delay: 1s; opacity: 0.8; }
+.crack3 { width: 14%; animation-delay: 1.5s; opacity: 0.6; }
+.crack4 { width: 16%; animation-delay: 2s; opacity: 0.4; }
+.crack5 { width: 18%; animation-delay: 2.5s; opacity: 0.2; }
+@keyframes rotate { to { rotate: 360deg; } }
+
+.progress-wrap {
+    position: relative;
+    width: 300px;
+    background: var(--secondary);
+    border-radius: 9999px;
+    height: 8px;
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+}
+.progress-fill {
+    position: absolute;
+    left: 0;
+    height: 100%; width: 0%;
+    background: var(--primary);
+    border-radius: 9999px;
+    transition: width 0.4s ease;
+}
+.progress-thumb {
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--primary);
+    background-color: var(--background);
+    transition: left 0.4s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    z-index: 2;
+}
+.progress-label { color: var(--muted-foreground); font-size: 0.875rem; margin-top: 12px; font-weight: 500; }
+
+/* ── Tab Content ── */
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.3s; }
+
+h2 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.025em; margin-bottom: 24px; color: var(--foreground); }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Stats Grid (Shadcn Cards) ── */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 24px;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    font-weight: 500;
+}
+
+.stat-val {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--foreground);
+    letter-spacing: -0.025em;
+}
+
+/* ── Table (Shadcn Style) ── */
+.table-card {
+    background-color: var(--background);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: auto;
+    max-height: calc(100vh - 280px);
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 0.875rem; text-align: left; }
+
+th {
+    padding: 12px 16px;
+    color: var(--muted-foreground);
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    background: var(--background);
+    z-index: 2;
+}
+
+td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--foreground);
+    vertical-align: middle;
+}
+
+tr:hover td { background-color: var(--muted); }
+tr:last-child td { border-bottom: none; }
+
+/* ── Pagination ── */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Shadcn paginations usually on right */
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.page-btn {
+    background: var(--background);
+    border: 1px solid var(--input);
+    color: var(--foreground);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: var(--accent);
+    color: var(--accent-foreground);
+}
+
+.page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.page-info { color: var(--muted-foreground); font-size: 0.875rem; font-weight: 500; }
+
+/* ── Search (Shadcn Input) ── */
+.search-bar { display: flex; gap: 8px; margin-bottom: 24px; }
+
+.search-input {
+    flex-grow: 1;
+    height: 40px;
+    background: var(--background);
+    border: 1px solid var(--input);
+    color: var(--foreground);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    transition: outline 0.2s;
+}
+
+.search-input:focus { outline: none; border-color: var(--ring); box-shadow: 0 0 0 1px var(--ring); }
+.search-input::placeholder { color: var(--muted-foreground); }
+
+/* ── Custom Checkbox (Radix/Shadcn style) ── */
+.w-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+.w-container input {
+    position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0;
+}
+
+.w-checkmark {
+    position: absolute;
+    top: 0; left: 0;
+    height: 16px;
+    width: 16px;
+    background-color: transparent;
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+    transition: 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.w-container input:checked ~ .w-checkmark {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.w-checkmark:after {
+    content: ""; /* checkmark SVG path via CSS borders */
+    display: none;
+    width: 4px;
+    height: 8px;
+    border: solid var(--primary-foreground);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    margin-bottom: 2px;
+}
+
+.w-container input:checked ~ .w-checkmark:after { display: block; }
+
+/* ── Action Buttons (Copy & Profile Link) ── */
+.profile-link {
+    color: var(--muted-foreground);
+    background-color: transparent;
+    border: 1px solid transparent;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.profile-link:hover {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+}
+
+.copy-btn {
+    background-color: transparent;
+    color: var(--muted-foreground);
+    border: 1px solid transparent;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+}
+
+/* ── Inline Table Actions ── */
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.input-dark {
+    height: 32px;
+    background-color: var(--background);
+    border: 1px solid var(--input);
+    color: var(--foreground);
+    padding: 0 10px;
+    border-radius: 6px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.8rem;
+    width: 130px;
+}
+.input-dark:focus { outline: none; border-color: var(--ring); box-shadow: 0 0 0 1px var(--ring); }
+
+/* Ghost Icon Buttons for Table Actions */
+.save-btn, .fix-btn, .delete-button {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background-color: transparent;
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+}
+
+.save-btn { color: var(--success); }
+.save-btn:hover { background-color: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); }
+
+.fix-btn { color: var(--primary); }
+.fix-btn:hover { background-color: var(--accent); color: var(--accent-foreground); }
+.fix-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.delete-button { color: var(--muted-foreground); }
+.delete-button:hover { background-color: var(--destructive); color: var(--destructive-foreground); }
+.delete-svgIcon { display: none; } /* Replaced with font-awesome icon via JS below */
+
+/* ── Bulk Auto-Fix Bar ── */
+.bulk-fix-bar {
+    display: flex;
+    background: rgba(16, 185, 129, 0.05);
+    border: 1px solid rgba(16, 185, 129, 0.15);
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+    align-items: center;
+    justify-content: space-between;
+    animation: fadeIn 0.3s;
+}
+
+.fix-all-btn {
+    background: var(--foreground);
+    color: var(--background);
+    border: none;
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 0.2s;
+}
+
+.fix-all-btn:hover { opacity: 0.9; }
+.fix-all-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Settings Card ── */
+.settings-card {
+    max-width: 600px;
+    background: var(--card);
+    padding: 24px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.settings-group { margin-bottom: 16px; }
+
+.settings-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--foreground);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.settings-group input {
+    height: 40px;
+    width: 100%;
+    background: var(--background);
+    border: 1px solid var(--input);
+    color: var(--foreground);
+    padding: 0 12px;
+    border-radius: 6px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+}
+.settings-group input:focus { outline: none; border-color: var(--ring); box-shadow: 0 0 0 1px var(--ring); }
+
+/* ── Status Text ── */
+span.highlight {
+    background: var(--accent);
+    color: var(--foreground);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: ui-monospace, monospace;
+    font-size: 0.8rem;
+    border: 1px solid var(--border);
+}
+
+.need-analysis {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--muted-foreground);
+}
+
+.need-analysis i {
+    font-size: 3rem;
+    opacity: 0.3;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.need-analysis p { font-size: 0.875rem; }
+
+/* ── Toasts (Shadcn Style) ── */
+.toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 9999;
+}
+
+.toast {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    padding: 16px 24px;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--foreground);
+    font-weight: 500;
+    font-size: 0.875rem;
+    transform: translateX(120%);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+}
+
+.toast.error { border-color: var(--destructive); }
+.toast.error i { color: var(--danger) !important; }
+.toast.success i { color: var(--success) !important; }
+.toast.show { transform: translateX(0); }
+
+/* ── GitHub Simple Button ── */
+.github-simple-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 12px;
+    background-color: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted-foreground);
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.github-simple-btn i {
+    font-size: 1.1rem;
+    color: var(--foreground);
+    transition: transform 0.2s ease;
+}
+
+.github-simple-btn:hover {
+    color: var(--foreground);
+    border-color: var(--ring);
+    background-color: var(--accent);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.github-simple-btn:hover i {
+    transform: scale(1.1);
+}
