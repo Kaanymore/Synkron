@@ -1,6 +1,6 @@
 <div align="center">
 
-# Synkron
+# ⚡ Synkron
 
 ### E-Commerce Customer Intelligence Platform
 
@@ -13,9 +13,6 @@
 
 ---
 
-![Synkron](https://awesomescreenshot.s3.amazonaws.com/image/7295575/59832435-166ec442a568c71ad7a395613139237d.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJSCJQ2NM3XLFPVKA%2F20260415%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260415T123515Z&X-Amz-Expires=28800&X-Amz-SignedHeaders=host&X-Amz-Signature=de4a2dbae467cf7d3456be117aeb3ff6044c8f557b8b8daa0fdde50bb23504c9)
-
-
 *E-ticaret mağazanızdaki müşteri verilerini tek bir panelden yönetin.*
 *Kopya kayıtları bulun, hatalı numaraları otomatik düzeltin, veritabanınızı temizleyin.*
 
@@ -23,58 +20,58 @@
 
 ---
 
-## Nedir?
+## 🎯 Nedir?
 
 **Synkron**, e-ticaret platformlarına bağlanarak müşteri verilerinizi analiz eden, sorunları tespit eden ve otomatik düzeltme sağlayan açık kaynaklı bir yönetim panelidir.
 
-Binlerce müşteri kaydını saniyeler (Veritabanına bağlı olarak saniye kavramı saat olabilir) içinde tarayarak:
--  **Hatalı telefon numaralarını** otomatik düzeltir
--  **Kopya kayıtları** tespit eder
--  **Mükerrer e-postaları** bulur
--  **Toplu silme** ile veritabanını temizler
+Binlerce müşteri kaydını saniyeler içinde tarayarak:
+- 📞 **Hatalı telefon numaralarını** otomatik düzeltir
+- 🔄 **Kopya kayıtları** tespit eder
+- 📧 **Mükerrer e-postaları** bulur
+- 🗑️ **Toplu silme** ile veritabanını temizler
 
 ---
 
-##  Özellikler
+## ✨ Özellikler
 
-###  Anlık İstatistik Panosu
+### 📊 Anlık İstatistik Panosu
 Sayfa açılır açılmaz toplam müşteri sayısı, numarasız müşteriler ve analiz sonuçları görüntülenir.
 
-###  Derin Analiz Motoru
+### 🔍 Derin Analiz Motoru
 Arka planda çalışan analiz motoru tüm müşteriöri tarar ve sınıflandırır:
 - **Aynı Telefon Numaraları** — Kopya kayıtları gruplayarak gösterir
 - **Aynı E-posta Adresleri** — Mükerrer mail adreslerini tespit eder
 - **Hatalı Numaralar** — +90 ile başlamayan tüm numaraları listeler
 
-###  Telefon Numarası Otomatik Düzeltme
+### 🪄 Telefon Numarası Otomatik Düzeltme
 Hatalı formatlı Türk telefon numaralarını **tek tıkla** veya **toplu** olarak düzeltir:
 
 | Mevcut Format | Otomatik Düzeltme | Sonuç |
 |:---:|:---:|:---:|
-| `5550001122` | +90 ekle | `+905550001122` |
-| `05550001122` | 0'ı kaldır, +90 ekle | `+905550001122` |
-| `905550001122` | + ekle | `+905550001122` |
+| `5330874047` | +90 ekle | `+905330874047` |
+| `05330874047` | 0'ı kaldır, +90 ekle | `+905330874047` |
+| `905330874047` | + ekle | `+905330874047` |
 
-> Tanınmayan formatlar atlanır — hiçbir veri bozulmaz.
+> ⚠️ Tanınmayan formatlar atlanır — hiçbir veri bozulmaz.
 
-### Müşteri Arama
+### 🔎 Müşteri Arama
 İsim, e-posta veya telefon numarası ile anlık arama yapın.
 
-### İl / İlçe Filtreleme
+### 🏙️ İl / İlçe Filtreleme
 Analiz sonuçlarını şehir ve ilçe bazında filtreleyin.
 
-### Manuel Düzenleme
+### ✏️ Manuel Düzenleme
 Her müşterinin telefon numarasını tek tek güncelleyebilirsiniz.
 
-### Tekli ve Toplu Silme
+### 🗑️ Tekli ve Toplu Silme
 Tek bir müşteriyi veya seçili müşterileri kalıcı olarak silin. Silme öncesi onay istenir.
 
-### API Ayarları
+### ⚙️ API Ayarları
 Client ID ve Client Secret bilgilerini arayüz üzerinden güncelleyin. Bilgiler `.env` dosyasına kaydedilir.
 
 ---
 
-## Kurulum
+## 🚀 Kurulum
 
 ### Gereksinimler
 - Python 3.8+
@@ -84,7 +81,7 @@ Client ID ve Client Secret bilgilerini arayüz üzerinden güncelleyin. Bilgiler
 
 ```bash
 # 1. Klonlayın
-git clone https://github.com/synkron-panel/synkron.git
+git clone https://github.com/YOUR_USERNAME/synkron.git
 cd synkron
 
 # 2. Virtual environment (önerilen)
@@ -103,11 +100,11 @@ cp .env.example .env
 python app.py
 ```
 
-Tarayıcınızda otomatik olarak `http://127.0.0.1:5001` açılacaktır.
+Tarayıcınızda otomatik olarak `http://127.0.0.1:5000` açılacaktır.
 
 ---
 
-## Proje Yapısı
+## 📁 Proje Yapısı
 
 ```
 synkron/
@@ -120,16 +117,18 @@ synkron/
 ├── README.md
 ├── icon.png               # Uygulama ikonu
 ├── static/
-│   ├── icon.png           # Sidebar ikonu
-│   ├── style.css          # Tasarım sistemi
-│   └── app.js             # Frontend mantığı
+│   ├── icon.png
+│   ├── css/
+│   │   └── style.css      # Tasarım sistemi
+│   └── js/
+│       └── app.js         # Frontend mantığı
 └── templates/
     └── index.html         # HTML iskeleti
 ```
 
 ---
 
-## Güvenlik
+## 🛡️ Güvenlik
 
 - API anahtarlarınız **asla** repoya eklenmez (`.gitignore` ile korunur)
 - Gerçek veriler yalnızca sizin tarayıcınızda görüntülenir
@@ -137,7 +136,7 @@ synkron/
 
 ---
 
-## Teknoloji Yığını
+## 🏗️ Teknoloji Yığını
 
 | Bileşen | Teknoloji |
 |---------|----------|
@@ -148,13 +147,13 @@ synkron/
 
 ---
 
-## Katkıda Bulunun
+## 🤝 Katkıda Bulunun
 
 Katkılarınızı bekliyoruz! Detaylar için [CONTRIBUTING.md](CONTRIBUTING.md) dosyasına bakın.
 
 ---
 
-## Lisans
+## 📄 Lisans
 
 Bu proje [MIT Lisansı](LICENSE) ile lisanslanmıştır.
 
@@ -162,6 +161,6 @@ Bu proje [MIT Lisansı](LICENSE) ile lisanslanmıştır.
 
 <div align="center">
 
-*Synkron ile müşteri verinizi kontrol altına alın.*
+**⚡ Synkron ile müşteri verinizi kontrol altına alın.**
 
 </div>

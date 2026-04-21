@@ -7,7 +7,7 @@ and clean your customer database.
 
 Version: 1.0.0
 License: MIT
-Repository: https://github.com/synkron-panel/synkron
+Repository: https://github.com/your-username/synkron
 """
 
 import os
@@ -38,9 +38,16 @@ load_dotenv()
 
 CLIENT_ID = os.getenv('IKAS_CLIENT_ID')
 CLIENT_SECRET = os.getenv('IKAS_CLIENT_SECRET')
-STORE_SLUG = os.getenv('IKAS_STORE_SLUG', '')
+STORE_SLUG = os.getenv('IKAS_STORE_SLUG', 'voidtrcom')
 AUTH_URL = os.getenv('IKAS_AUTH_URL', 'https://api.myikas.com/api/admin/oauth/token')
 GRAPHQL_URL = os.getenv('IKAS_GRAPHQL_URL', 'https://api.myikas.com/api/v2/admin/graphql')
+REQUEST_CONNECT_TIMEOUT = float(os.getenv('IKAS_CONNECT_TIMEOUT', '5'))
+REQUEST_READ_TIMEOUT = float(os.getenv('IKAS_READ_TIMEOUT', '30'))
+REQUEST_TIMEOUT = (REQUEST_CONNECT_TIMEOUT, REQUEST_READ_TIMEOUT)
+API_RATE_LIMIT_MAX_REQUESTS = 50
+API_RATE_LIMIT_WINDOW_SECONDS = 10
+API_SAFE_REQUEST_DELAY_SECONDS = 0.25
+STORE_SLUG_RE = re.compile(r'^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$')
 
 access_token = None
 
@@ -75,7 +82,7 @@ def get_token():
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SECRET
     }
-    response = requests.post(AUTH_URL, data=data)
+    response = post_with_timeout(AUTH_URL, data=data)
     if response.status_code == 200:
         access_token = response.json().get('access_token')
         return access_token
@@ -86,6 +93,28 @@ def get_token():
 # ═══════════════════════════════════════════════
 
 FIELDS = "id firstName lastName email phone createdAt addresses { city { name } district { name } }"
+
+
+def post_with_timeout(url, **kwargs):
+    """Wrap outbound POST calls with a consistent timeout and error surface."""
+    try:
+        return requests.post(url, timeout=REQUEST_TIMEOUT, **kwargs)
+    except requests.Timeout as exc:
+        raise Exception(
+            f"Dış API zaman aşımı ({REQUEST_CONNECT_TIMEOUT:.0f}s bağlantı / {REQUEST_READ_TIMEOUT:.0f}s yanıt)"
+        ) from exc
+    except requests.RequestException as exc:
+        raise Exception(f"Dış API isteği başarısız: {exc}") from exc
+
+
+def is_valid_store_slug(slug):
+    """Validate ikas store slug format."""
+    return bool(slug and STORE_SLUG_RE.fullmatch(slug))
+
+
+def is_safe_env_value(value):
+    """Reject line breaks to avoid corrupting the .env file structure."""
+    return '\n' not in value and '\r' not in value
 
 
 def process_addr(c):
@@ -118,7 +147,7 @@ def _fetch_page(page, headers, limit=200, phone_empty=False):
         q = 'query($p:Int){listCustomer(phone:{eq:""},pagination:{limit:%d,page:$p}){data{%s}hasNext count}}' % (limit, FIELDS)
     else:
         q = 'query($p:Int){listCustomer(pagination:{limit:%d,page:$p}){data{%s}hasNext count}}' % (limit, FIELDS)
-    res = requests.post(GRAPHQL_URL, json={'query': q, 'variables': {"p": page}}, headers=headers)
+    res = post_with_timeout(GRAPHQL_URL, json={'query': q, 'variables': {"p": page}}, headers=headers)
     if res.status_code == 200:
         d = res.json()
         if 'errors' in d:
@@ -205,7 +234,7 @@ def run_analysis():
 
             analysis['fetched_pages'] += 1
             analysis['progress'] = int((analysis['fetched_pages'] / total_pages) * 100)
-            time.sleep(0.25)  # ~4 req/sec safe margin
+            time.sleep(API_SAFE_REQUEST_DELAY_SECONDS)  # ~4 req/sec safe margin
 
         # Process & classify
         phone_map = {}
@@ -251,7 +280,17 @@ def run_analysis():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template(
+        'index.html',
+        store_slug=STORE_SLUG,
+        api_rate_limit={
+            'max_requests': API_RATE_LIMIT_MAX_REQUESTS,
+            'window_seconds': API_RATE_LIMIT_WINDOW_SECONDS,
+            'safe_delay_ms': int(API_SAFE_REQUEST_DELAY_SECONDS * 1000),
+            'connect_timeout_seconds': REQUEST_CONNECT_TIMEOUT,
+            'read_timeout_seconds': REQUEST_READ_TIMEOUT,
+        }
+    )
 
 
 @app.after_request
@@ -271,11 +310,11 @@ def api_stats():
         h = {'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'}
 
         q1 = '{listCustomer(pagination:{limit:1,page:1}){count}}'
-        r1 = requests.post(GRAPHQL_URL, json={'query': q1}, headers=h)
+        r1 = post_with_timeout(GRAPHQL_URL, json={'query': q1}, headers=h)
         total = r1.json()['data']['listCustomer']['count']
 
         q2 = '{listCustomer(phone:{eq:""},pagination:{limit:1,page:1}){count}}'
-        r2 = requests.post(GRAPHQL_URL, json={'query': q2}, headers=h)
+        r2 = post_with_timeout(GRAPHQL_URL, json={'query': q2}, headers=h)
         missing = r2.json()['data']['listCustomer']['count']
 
         dup = len(analysis['duplicates']) if analysis['status'] == 'done' else '?'
@@ -304,7 +343,7 @@ def api_all():
             q = 'query($p:Int){listCustomer(pagination:{limit:50,page:$p}){data{%s}hasNext count}}' % FIELDS
             variables = {"p": page}
 
-        res = requests.post(GRAPHQL_URL, json={'query': q, 'variables': variables}, headers=h)
+        res = post_with_timeout(GRAPHQL_URL, json={'query': q, 'variables': variables}, headers=h)
         d = res.json()
         if 'errors' in d:
             raise Exception(str(d['errors']))
@@ -395,11 +434,13 @@ def api_analyze_results(tab):
 def update_phone():
     """Manually update a customer's phone number."""
     try:
-        data = request.json
+        data = request.get_json(silent=True) or {}
         customer_id = data.get('id')
-        new_phone = data.get('phone')
+        new_phone = (data.get('phone') or '').strip()
         if not customer_id:
             return jsonify(success=False, error='Customer ID gerekli'), 400
+        if not re.fullmatch(r'^\+90[5]\d{9}$', new_phone):
+            return jsonify(success=False, error='Telefon +905XXXXXXXXX formatında olmalı.'), 400
         token = get_token()
         h = {'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'}
         mutation = """
@@ -407,7 +448,7 @@ def update_phone():
             updateCustomer(input: $input) { id phone updatedAt }
         }"""
         variables = {"input": {"id": customer_id, "phone": new_phone}}
-        res = requests.post(GRAPHQL_URL, json={'query': mutation, 'variables': variables}, headers=h)
+        res = post_with_timeout(GRAPHQL_URL, json={'query': mutation, 'variables': variables}, headers=h)
         if res.status_code == 200:
             rd = res.json()
             if 'errors' in rd:
@@ -422,8 +463,11 @@ def update_phone():
 def delete_customers():
     """Delete one or more customers permanently."""
     try:
-        data = request.json
+        data = request.get_json(silent=True) or {}
         ids = data.get('ids', [])
+        if not isinstance(ids, list):
+            return jsonify(success=False, error='ID listesi geçersiz.'), 400
+        ids = [str(customer_id).strip() for customer_id in ids if str(customer_id).strip()]
         if not ids:
             return jsonify(success=False, error='Hiç müşteri seçilmedi.'), 400
         token = get_token()
@@ -432,7 +476,7 @@ def delete_customers():
         mutation DeleteCustomerList($idList: [String!]!) {
             deleteCustomerList(idList: $idList)
         }"""
-        res = requests.post(GRAPHQL_URL, json={'query': mutation, 'variables': {"idList": ids}}, headers=h)
+        res = post_with_timeout(GRAPHQL_URL, json={'query': mutation, 'variables': {"idList": ids}}, headers=h)
         if res.status_code == 200:
             if 'errors' in res.json():
                 return jsonify(success=False, error=res.json()['errors'][0].get('message')), 400
@@ -455,7 +499,7 @@ def auto_fix_phone():
         905XXXXXXXXX → +905XXXXXXXXX
     """
     try:
-        data = request.json
+        data = request.get_json(silent=True) or {}
         customer_id = data.get('id')
         if not customer_id:
             return jsonify(success=False, error='Customer ID gerekli'), 400
@@ -488,7 +532,7 @@ def auto_fix_phone():
             updateCustomer(input: $input) { id phone updatedAt }
         }"""
         variables = {"input": {"id": customer_id, "phone": new_phone}}
-        res = requests.post(GRAPHQL_URL, json={'query': mutation, 'variables': variables}, headers=h)
+        res = post_with_timeout(GRAPHQL_URL, json={'query': mutation, 'variables': variables}, headers=h)
 
         if res.status_code == 200:
             rd = res.json()
@@ -543,7 +587,7 @@ def bulk_auto_fix():
 
             try:
                 variables = {"input": {"id": c['id'], "phone": new_phone}}
-                res = requests.post(GRAPHQL_URL, json={'query': mutation, 'variables': variables}, headers=h)
+                res = post_with_timeout(GRAPHQL_URL, json={'query': mutation, 'variables': variables}, headers=h)
 
                 if res.status_code == 200:
                     rd = res.json()
@@ -555,7 +599,7 @@ def bulk_auto_fix():
                 else:
                     errors += 1
 
-                time.sleep(0.25)  # Rate limiting (~4 req/sec)
+                time.sleep(API_SAFE_REQUEST_DELAY_SECONDS)  # Rate limiting (~4 req/sec)
             except Exception:
                 errors += 1
 
@@ -581,24 +625,40 @@ def settings_handler():
         env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
 
     if request.method == 'GET':
-        return jsonify(client_id=CLIENT_ID or '', client_secret=CLIENT_SECRET or '', store_slug=STORE_SLUG or '')
+        return jsonify(
+            client_id=CLIENT_ID or '',
+            store_slug=STORE_SLUG or '',
+            secret_configured=bool(CLIENT_SECRET)
+        )
 
-    data = request.json
-    cid = data.get('client_id', '')
-    csecret = data.get('client_secret', '')
-    slug = data.get('store_slug', '')
+    data = request.get_json(silent=True) or {}
+    cid = (data.get('client_id') or '').strip()
+    csecret = (data.get('client_secret') or '').strip()
+    slug = (data.get('store_slug') or '').strip().lower()
+
+    if not cid:
+        return jsonify(success=False, error='Client ID gerekli.'), 400
+    if not slug or not is_valid_store_slug(slug):
+        return jsonify(success=False, error='Mağaza slug formatı geçersiz.'), 400
+
+    effective_secret = csecret or CLIENT_SECRET or ''
+    if not effective_secret:
+        return jsonify(success=False, error='Client Secret gerekli.'), 400
+    if not all(is_safe_env_value(value) for value in (cid, effective_secret, slug)):
+        return jsonify(success=False, error='Ayar alanlarında satır sonu karakteri olamaz.'), 400
+
     try:
         with open(env_path, 'w') as f:
             f.write(f"IKAS_CLIENT_ID={cid}\n")
-            f.write(f"IKAS_CLIENT_SECRET={csecret}\n")
+            f.write(f"IKAS_CLIENT_SECRET={effective_secret}\n")
             f.write(f"IKAS_STORE_SLUG={slug}\n")
             f.write(f"IKAS_AUTH_URL={AUTH_URL}\n")
             f.write(f"IKAS_GRAPHQL_URL={GRAPHQL_URL}\n")
         CLIENT_ID = cid
-        CLIENT_SECRET = csecret
+        CLIENT_SECRET = effective_secret
         STORE_SLUG = slug
         access_token = None
-        return jsonify(success=True)
+        return jsonify(success=True, secret_configured=True)
     except Exception as e:
         return jsonify(success=False, error=str(e)), 500
 

@@ -47,13 +47,9 @@ body {
     background-color: var(--background);
     display: flex;
     flex-direction: column;
+    padding: 24px 16px;
     border-right: 1px solid var(--border);
     z-index: 10;
-    overflow: hidden;
-}
-
-.sidebar-top {
-    padding: 20px 16px 0;
 }
 
 .main-content {
@@ -88,139 +84,33 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+    font-size: 1rem;
+    font-weight: 600;
     color: var(--foreground);
-    margin-bottom: 20px;
+    margin-bottom: 32px;
     padding: 0 8px;
 }
 
 .logo img {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-}
-
-.logo-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-}
-
-.logo-name {
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-}
-
-.logo-sub {
-    font-size: 0.65rem;
-    color: var(--muted-foreground);
-    font-weight: 400;
-    letter-spacing: 0.02em;
-}
-
-/* ── Analyze Button (sidebar) ── */
-.analyze-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    height: 40px;
-    padding: 0 14px;
-    background: linear-gradient(135deg, #18181b 0%, #27272a 100%);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--foreground);
-    font-weight: 500;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-bottom: 4px;
-}
-
-.analyze-btn:hover {
-    border-color: var(--ring);
-    background: linear-gradient(135deg, #1c1c20 0%, #2d2d32 100%);
-}
-
-.analyze-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.analyze-btn-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     width: 24px;
     height: 24px;
-    border-radius: 5px;
-    background: var(--primary);
-    color: var(--primary-foreground);
-    font-size: 0.7rem;
-    flex-shrink: 0;
+    border-radius: 4px;
 }
 
 /* ── Sidebar Nav ── */
 .sidebar-nav {
     display: flex;
     flex-direction: column;
+    gap: 4px;
     flex-grow: 1;
     overflow-y: auto;
-    padding: 0 16px;
-}
-
-.nav-section {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.nav-section + .nav-section {
-    margin-top: 4px;
 }
 
 .nav-label {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-size: 0.75rem;
     color: var(--muted-foreground);
-    margin: 12px 0 6px 12px;
-    font-weight: 600;
-    opacity: 0.6;
-}
-
-/* ── Sidebar Bottom ── */
-.sidebar-bottom {
-    padding: 0 16px 16px;
-}
-
-.sidebar-divider {
-    height: 1px;
-    background: var(--border);
-    margin: 8px 0;
-}
-
-.sidebar-version {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px;
-    font-size: 0.7rem;
-    color: var(--muted-foreground);
-    opacity: 0.5;
-}
-
-.github-link {
-    color: var(--muted-foreground);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.2s, opacity 0.2s;
-    opacity: 0.7;
-}
-
-.github-link:hover {
-    color: var(--foreground);
-    opacity: 1;
+    margin: 16px 0 8px 12px;
+    font-weight: 500;
 }
 
 .nav-link {
@@ -305,6 +195,57 @@ body {
     padding: 0 32px;
     border-bottom: 1px solid var(--border);
     background: var(--background);
+}
+
+.api-info-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 32px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(90deg, rgba(250, 250, 250, 0.04), rgba(39, 39, 42, 0.35));
+}
+
+.api-info-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.api-info-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.api-info-copy p {
+    color: var(--muted-foreground);
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+.api-info-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.api-info-meta span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 9999px;
+    background: rgba(9, 9, 11, 0.75);
+    color: var(--muted-foreground);
+    font-size: 0.78rem;
+    white-space: nowrap;
 }
 
 .loc-filters {
@@ -760,6 +701,13 @@ tr:last-child td { border-bottom: none; }
 }
 .settings-group input:focus { outline: none; border-color: var(--ring); box-shadow: 0 0 0 1px var(--ring); }
 
+.settings-hint {
+    margin: 0 0 16px 0;
+    color: var(--muted-foreground);
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
 /* ── Status Text ── */
 span.highlight {
     background: var(--accent);
@@ -818,39 +766,14 @@ span.highlight {
 .toast.success i { color: var(--success) !important; }
 .toast.show { transform: translateX(0); }
 
-/* ── GitHub Simple Button ── */
-.github-simple-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    margin-top: 12px;
-    background-color: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted-foreground);
-    padding: 10px 14px;
-    border-radius: var(--radius);
-    font-size: 0.8rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
+@media (max-width: 900px) {
+    .api-info-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 14px 20px;
+    }
 
-.github-simple-btn i {
-    font-size: 1.1rem;
-    color: var(--foreground);
-    transition: transform 0.2s ease;
-}
-
-.github-simple-btn:hover {
-    color: var(--foreground);
-    border-color: var(--ring);
-    background-color: var(--accent);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px);
-}
-
-.github-simple-btn:hover i {
-    transform: scale(1.1);
+    .api-info-meta {
+        justify-content: flex-start;
+    }
 }

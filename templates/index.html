@@ -13,69 +13,48 @@
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
-        <div class="sidebar-top">
-            <div class="logo">
-                <img src="/static/icon.png" alt="Synkron">
-                <div class="logo-text">
-                    <span class="logo-name">Synkron</span>
-                    <span class="logo-sub">Customer Intelligence</span>
-                </div>
-            </div>
-
-            <button id="fetch-btn" class="analyze-btn" onclick="startAnalysis()">
-                <div class="analyze-btn-icon"><i class="fas fa-bolt"></i></div>
-                <span>Derin Analiz Başlat</span>
-            </button>
+        <div class="logo">
+            <img src="/static/icon.png" alt="Synkron">
+            <span>Synkron<br>Panel</span>
         </div>
 
-        <nav class="sidebar-nav">
-            <div class="nav-section">
-                <div class="nav-label">Genel Bakış</div>
-                <a class="nav-link active" onclick="switchTab('stat-tab', this)">
-                    <div class="left-part"><i class="fas fa-chart-pie"></i> İstatistik Panosu</div>
-                </a>
-            </div>
+        <button id="fetch-btn" class="cyan-btn" onclick="startAnalysis()">
+            <i class="fas fa-bolt"></i> Derin Analiz Başlat
+        </button>
 
-            <div class="nav-section">
-                <div class="nav-label">Müşteriler</div>
-                <a class="nav-link" onclick="switchTab('all-tab', this)">
-                    <div class="left-part"><i class="fas fa-users"></i> Tüm Müşteriler</div>
-                    <span class="badge" id="all-count">-</span>
-                </a>
-                <a class="nav-link" onclick="switchTab('dup-tab', this)">
-                    <div class="left-part"><i class="fas fa-copy"></i> Aynı Numaralar</div>
-                    <span class="badge" id="dup-count">-</span>
-                </a>
-                <a class="nav-link" onclick="switchTab('miss-tab', this)">
-                    <div class="left-part"><i class="fas fa-user-slash"></i> Numarasız</div>
-                    <span class="badge" id="miss-count">-</span>
-                </a>
-                <a class="nav-link" onclick="switchTab('invalid-tab', this)">
-                    <div class="left-part"><i class="fas fa-exclamation-triangle"></i> Hatalı Numaralar</div>
-                    <span class="badge" id="invalid-count">-</span>
-                </a>
-                <a class="nav-link" onclick="switchTab('email-tab', this)">
-                    <div class="left-part"><i class="fas fa-envelope"></i> Aynı Mailler</div>
-                    <span class="badge" id="email-count">-</span>
-                </a>
-            </div>
+        <nav class="sidebar-nav">
+            <div class="nav-label">Genel Bakış</div>
+            <a class="nav-link active" onclick="switchTab('stat-tab', this)">
+                <div class="left-part"><i class="fas fa-chart-pie"></i> İstatistik Panosu</div>
+            </a>
+
+            <div class="nav-label">Müşteriler</div>
+            <a class="nav-link" onclick="switchTab('all-tab', this)">
+                <div class="left-part"><i class="fas fa-users"></i> Tüm Müşteriler</div>
+                <span class="badge" id="all-count">-</span>
+            </a>
+            <a class="nav-link" onclick="switchTab('dup-tab', this)">
+                <div class="left-part"><i class="fas fa-copy"></i> Aynı Numaralar</div>
+                <span class="badge" id="dup-count">-</span>
+            </a>
+            <a class="nav-link" onclick="switchTab('miss-tab', this)">
+                <div class="left-part"><i class="fas fa-user-slash"></i> Numarasız</div>
+                <span class="badge" id="miss-count">-</span>
+            </a>
+            <a class="nav-link" onclick="switchTab('invalid-tab', this)">
+                <div class="left-part"><i class="fas fa-exclamation-triangle"></i> Hatalı Numaralar</div>
+                <span class="badge" id="invalid-count">-</span>
+            </a>
+            <a class="nav-link" onclick="switchTab('email-tab', this)">
+                <div class="left-part"><i class="fas fa-envelope"></i> Aynı Mailler</div>
+                <span class="badge" id="email-count">-</span>
+            </a>
         </nav>
 
-        <div class="sidebar-bottom">
-            <div class="sidebar-divider"></div>
+        <div style="margin-top:auto;" class="sidebar-nav">
             <a class="nav-link" onclick="switchTab('settings-tab', this); loadSettings();">
                 <div class="left-part"><i class="fas fa-cog"></i> Ayarlar</div>
-                <i class="fas fa-chevron-right" style="font-size:0.65rem;color:var(--muted-foreground);"></i>
             </a>
-            
-            <a href="https://github.com/Kaanymore/Synkron" target="_blank" class="github-simple-btn" title="GitHub'da İncele">
-                <i class="fab fa-github"></i>
-                <span>GitHub'da Değerlendir</span>
-            </a>
-
-            <div class="sidebar-version" style="justify-content: center; margin-top: 10px;">
-                <span>Synkron v1.0.0</span>
-            </div>
         </div>
     </aside>
 
@@ -94,6 +73,17 @@
                 </select>
             </div>
         </header>
+
+        <div class="api-info-bar" id="api-info-bar">
+            <div class="api-info-copy">
+                <div class="api-info-title"><i class="fas fa-gauge-high"></i> API Limit Koruması</div>
+                <p id="api-limit-text">API limit bilgisi yükleniyor...</p>
+            </div>
+            <div class="api-info-meta">
+                <span id="api-limit-delay">Bekleme stratejisi yükleniyor...</span>
+                <span id="api-limit-timeout">Timeout bilgisi yükleniyor...</span>
+            </div>
+        </div>
 
         <!-- Loading Overlay with Progress -->
         <div id="loading-overlay" class="loading-state">
@@ -257,19 +247,19 @@
                         <input type="text" id="cfg-client-id" placeholder="Client ID Girin">
                     </div>
                     <div class="settings-group">
-                        <label>CLIENT_SECRET</label>
-                        <input type="text" id="cfg-client-secret" placeholder="Client Secret Girin" autocomplete="off" spellcheck="false" style="-webkit-text-security: disc;">
+                        <label>Yeni CLIENT_SECRET</label>
+                        <input type="password" id="cfg-client-secret" placeholder="Boş bırakılırsa mevcut secret korunur" autocomplete="off" spellcheck="false">
                     </div>
                     <div class="settings-group">
                         <label>Mağaza Adı (Slug)</label>
-                        <input type="text" id="cfg-store-slug" placeholder="örn: magazaadi">
+                        <input type="text" id="cfg-store-slug" placeholder="örn: voidtrcom">
                     </div>
+                    <p id="cfg-secret-status" class="settings-hint"></p>
                     <button class="cyan-btn" style="width:100%; margin:0;" onclick="saveSettings()">
                         <i class="fas fa-save"></i> Kimlik Bilgilerini Kaydet
                     </button>
                     <p style="margin-top:15px; font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-info-circle"></i> Ayarları kaydettikten sonra sayfayı yeniden yükleyiniz.</p>
                 </div>
-                
             </div>
 
         </div>
@@ -277,6 +267,12 @@
 
     <div class="toast-container" id="toast-container"></div>
 
+    <script>
+        window.appConfig = {
+            storeSlug: {{ store_slug|tojson }},
+            apiRateLimit: {{ api_rate_limit|tojson }}
+        };
+    </script>
     <script src="/static/app.js"></script>
 </body>
 </html>
